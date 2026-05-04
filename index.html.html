@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار شامل - انكسار الضوء وتطبيقاته | الصف التاسع</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --deep: #0a0e1a;
+    --navy: #0d1b3e;
+    --blue: #1a3a6b;
+    --accent: #00c8ff;
+    --gold: #f5c842;
+    --light-blue: #e8f4ff;
+    --glass: rgba(255,255,255,0.06);
+    --border: rgba(0,200,255,0.2);
+    --correct: #00e676;
+    --wrong: #ff4444;
+    --text: #e8f4ff;
+    --muted: rgba(232,244,255,0.6);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    direction: rtl;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 800px 400px at 20% 20%, rgba(0,100,200,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 600px at 80% 80%, rgba(0,50,150,0.1) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 50% 50%, rgba(0,200,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Light rays animation */
+  .rays {
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    width: 300px;
+    height: 600px;
+    background: linear-gradient(135deg, rgba(0,200,255,0.03) 0%, transparent 100%);
+    transform: rotate(25deg);
+    animation: rayMove 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .rays:nth-child(2) {
+    left: auto; right: -100px;
+    animation-delay: 4s;
+    background: linear-gradient(-135deg, rgba(0,200,255,0.02) 0%, transparent 100%);
+  }
+
+  @keyframes rayMove {
+    0%, 100% { opacity: 0.5; transform: rotate(25deg) translateY(0); }
+    50% { opacity: 1; transform: rotate(25deg) translateY(30px); }
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 50px 20px 40px;
+    position: relative;
+  }
+
+  .subject-tag {
+    display: inline-block;
+    background: rgba(0,200,255,0.1);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 0.85rem;
+    padding: 6px 18px;
+    border-radius: 50px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .header h1 {
+    font-family: 'Cairo', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .stat-pill {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-pill span:first-child {
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  /* Progress bar */
+  .progress-container {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    height: 6px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    width: 0%;
+    box-shadow: 0 0 10px rgba(0,200,255,0.5);
+  }
+
+  .progress-label {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  /* Section titles */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--blue), rgba(0,200,255,0.3));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .section-title h2 {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .section-title .count {
+    margin-right: auto;
+    font-size: 0.85rem;
+    color: var(--muted);
+    background: var(--glass);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* Question card */
+  .question-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--blue));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .question-card.answered::before { opacity: 1; }
+  .question-card.correct { border-color: rgba(0,230,118,0.4); }
+  .question-card.wrong { border-color: rgba(255,68,68,0.4); }
+
+  .question-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0,200,255,0.4);
+  }
+
+  .question-num {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .question-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .question-text .formula {
+    background: rgba(0,200,255,0.1);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+    font-family: 'Cairo', monospace;
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin: 8px 0;
+  }
+
+  /* MCQ options */
+  .options {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .option:hover {
+    background: rgba(0,200,255,0.08);
+    border-color: rgba(0,200,255,0.3);
+    transform: translateX(-3px);
+  }
+
+  .option.selected {
+    background: rgba(0,200,255,0.12);
+    border-color: var(--accent);
+  }
+
+  .option.correct-answer {
+    background: rgba(0,230,118,0.1);
+    border-color: var(--correct);
+    color: var(--correct);
+  }
+
+  .option.wrong-answer {
+    background: rgba(255,68,68,0.1);
+    border-color: var(--wrong);
+    color: var(--wrong);
+  }
+
+  .option-label {
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-family: 'Cairo', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .option.selected .option-label { background: var(--accent); color: var(--deep); }
+  .option.correct-answer .option-label { background: var(--correct); color: var(--deep); }
+  .option.wrong-answer .option-label { background: var(--wrong); color: white; }
+
+  /* True/False */
+  .tf-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .tf-btn {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .tf-btn:hover { background: rgba(0,200,255,0.08); border-color: rgba(0,200,255,0.3); }
+  .tf-btn.selected { background: rgba(0,200,255,0.15); border-color: var(--accent); color: var(--accent); }
+  .tf-btn.correct-answer { background: rgba(0,230,118,0.1); border-color: var(--correct); color: var(--correct); }
+  .tf-btn.wrong-answer { background: rgba(255,68,68,0.1); border-color: var(--wrong); color: var(--wrong); }
+
+  /* Fill in blank */
+  .fill-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    margin-top: 8px;
+    transition: border-color 0.3s;
+    direction: rtl;
+  }
+
+  .fill-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(0,200,255,0.05);
+    box-shadow: 0 0 0 3px rgba(0,200,255,0.1);
+  }
+
+  .fill-input.correct { border-color: var(--correct); background: rgba(0,230,118,0.05); }
+  .fill-input.wrong { border-color: var(--wrong); background: rgba(255,68,68,0.05); }
+
+  /* Feedback */
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .feedback.correct { background: rgba(0,230,118,0.1); border: 1px solid rgba(0,230,118,0.3); color: #00e676; }
+  .feedback.wrong { background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); color: #ff8888; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Buttons */
+  .btn {
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: none;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    color: var(--deep);
+    box-shadow: 0 4px 20px rgba(0,200,255,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(0,200,255,0.5);
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--gold), #e0a800);
+    color: var(--deep);
+    font-size: 1.1rem;
+    padding: 16px 50px;
+    box-shadow: 0 4px 20px rgba(245,200,66,0.3);
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 40px rgba(245,200,66,0.5);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Results screen */
+  .results-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .score-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(0,200,255,0.1), transparent);
+    box-shadow: 0 0 40px rgba(0,200,255,0.3), inset 0 0 40px rgba(0,200,255,0.05);
+  }
+
+  .score-circle::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,200,255,0.2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+
+  .score-number {
+    font-family: 'Cairo', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .score-total {
+    font-size: 1rem;
+    color: var(--muted);
+  }
+
+  .score-percent {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+
+  .results-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+
+  .results-subtitle {
+    color: var(--muted);
+    margin-bottom: 30px;
+    font-size: 1rem;
+  }
+
+  .results-breakdown {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 30px 0;
+  }
+
+  .breakdown-item {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .breakdown-item .num {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  .breakdown-item .label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .breakdown-item.c .num { color: var(--correct); }
+  .breakdown-item.w .num { color: var(--wrong); }
+  .breakdown-item.t .num { color: var(--gold); }
+
+  .grade-badge {
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .grade-excellent { background: rgba(0,230,118,0.15); border: 1px solid rgba(0,230,118,0.4); color: var(--correct); }
+  .grade-good { background: rgba(0,200,255,0.15); border: 1px solid rgba(0,200,255,0.4); color: var(--accent); }
+  .grade-pass { background: rgba(245,200,66,0.15); border: 1px solid rgba(245,200,66,0.4); color: var(--gold); }
+  .grade-fail { background: rgba(255,68,68,0.15); border: 1px solid rgba(255,68,68,0.4); color: var(--wrong); }
+
+  .btn-retry {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: var(--text);
+    margin-top: 10px;
+  }
+
+  .btn-retry:hover { background: rgba(255,255,255,0.1); }
+
+  /* Calculation question */
+  .calc-note {
+    background: rgba(245,200,66,0.08);
+    border: 1px solid rgba(245,200,66,0.2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: rgba(245,200,66,0.8);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .given-data {
+    background: rgba(0,200,255,0.06);
+    border-right: 3px solid var(--accent);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 10px 0;
+    font-size: 0.9rem;
+  }
+
+  .given-data strong { color: var(--accent); display: block; margin-bottom: 6px; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .stats-bar { gap: 12px; }
+    .stat-pill { font-size: 0.8rem; padding: 6px 12px; }
+    .results-breakdown { grid-template-columns: 1fr 1fr; }
+    .tf-options { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 1.6rem; }
+    .question-card { padding: 18px; }
+  }
+
+  /* Table for data */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.9rem;
+  }
+
+  .data-table th, .data-table td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: center;
+  }
+
+  .data-table th {
+    background: rgba(0,200,255,0.1);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .data-table td { background: rgba(255,255,255,0.03); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  .timer-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .timer-display {
+    font-family: 'Cairo', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(245,200,66,0.1);
+    border: 1px solid rgba(245,200,66,0.3);
+    padding: 4px 14px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="rays"></div>
+<div class="rays"></div>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="subject-tag">فيزياء | الصف التاسع | الفصل الثاني</div>
+    <h1>اختبار شامل<br>انكسار الضوء وتطبيقاته</h1>
+    <p>الوحدة الخامسة — يشمل جميع دروس الوحدة</p>
+    <div class="stats-bar">
+      <div class="stat-pill"><span>📝</span> 30 سؤالاً</div>
+      <div class="stat-pill"><span>⭐</span> متعدد الأنواع</div>
+      <div class="stat-pill"><span>🎯</span> شامل للوحدة</div>
+    </div>
+  </div>
+
+  <!-- Quiz Form -->
+  <div id="quizForm">
+    <div class="timer-bar">
+      <span>⏱️ الوقت المنقضي:</span>
+      <div class="timer-display" id="timer">00:00</div>
+    </div>
+
+    <div class="progress-label" id="progressLabel">لم يُجب على أي سؤال بعد</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Section 1: MCQ -->
+    <div class="section-title">
+      <div class="section-icon">🔵</div>
+      <h2>أولاً: أسئلة الاختيار من متعدد</h2>
+      <span class="count">15 سؤالاً</span>
+    </div>
+
+    <!-- Q1 -->
+    <div class="question-card" data-q="1" data-type="mcq" data-answer="b">
+      <div class="question-num">السؤال 1</div>
+      <div class="question-text">ما تعريف ظاهرة انكسار الضوء؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 1)">
+          <div class="option-label">أ</div>
+          ارتداد الضوء عن سطح عاكس
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 1)">
+          <div class="option-label">ب</div>
+          انحراف مسار الضوء عن اتجاهه عند انتقاله بين وسطين شفافين مختلفين
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 1)">
+          <div class="option-label">ج</div>
+          امتصاص الضوء من قبل المادة
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 1)">
+          <div class="option-label">د</div>
+          تشتت الضوء الأبيض إلى ألوانه الطيفية
+        </div>
+      </div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question-card" data-q="2" data-type="mcq" data-answer="c">
+      <div class="question-num">السؤال 2</div>
+      <div class="question-text">ما العلاقة التي تُعبّر عن معامل الانكسار لوسط شفاف؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 2)">
+          <div class="option-label">أ</div>
+          n = ν / c
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 2)">
+          <div class="option-label">ب</div>
+          n = c + ν
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 2)">
+          <div class="option-label">ج</div>
+          n = c / ν
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 2)">
+          <div class="option-label">د</div>
+          n = ν − c
+        </div>
+      </div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question-card" data-q="3" data-type="mcq" data-answer="d">
+      <div class="question-num">السؤال 3</div>
+      <div class="question-text">ترتيب المواد التالية تصاعدياً من حيث معامل الانكسار هو:</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 3)">
+          <div class="option-label">أ</div>
+          الماء — الهواء — الزجاج — الماس
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 3)">
+          <div class="option-label">ب</div>
+          الزجاج — الماس — الماء — الهواء
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 3)">
+          <div class="option-label">ج</div>
+          الهواء — الزجاج — الماء — الماس
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 3)">
+          <div class="option-label">د</div>
+          الهواء — الماء — الزجاج — الماس
+        </div>
+      </div>
+      <div class="feedback" id="fb3"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question-card" data-q="4" data-type="mcq" data-answer="a">
+      <div class="question-num">السؤال 4</div>
+      <div class="question-text">حسب قانون سنِل (قانون الانكسار)، ما العلاقة الصحيحة؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 4)">
+          <div class="option-label">أ</div>
+          n₁ sin θ₁ = n₂ sin θ₂
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 4)">
+          <div class="option-label">ب</div>
+          n₁ sin θ₂ = n₂ sin θ₁
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 4)">
+          <div class="option-label">ج</div>
+          n₁ cos θ₁ = n₂ cos θ₂
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 4)">
+          <div class="option-label">د</div>
+          n₁ × θ₁ = n₂ × θ₂
+        </div>
+      </div>
+      <div class="feedback" id="fb4"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question-card" data-q="5" data-type="mcq" data-answer="b">
+      <div class="question-num">السؤال 5</div>
+      <div class="question-text">عند انتقال الشعاع الضوئي من الماء (n=1.33) إلى الزجاج (n=1.52)، ماذا يحدث للشعاع؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 5)">
+          <div class="option-label">أ</div>
+          ينكسر مبتعداً عن العمود
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 5)">
+          <div class="option-label">ب</div>
+          ينكسر مقترباً من العمود
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 5)">
+          <div class="option-label">ج</div>
+          يستمر في مساره دون انحراف
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 5)">
+          <div class="option-label">د</div>
+          ينعكس كلياً
+        </div>
+      </div>
+      <div class="feedback" id="fb5"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question-card" data-q="6" data-type="mcq" data-answer="c">
+      <div class="question-num">السؤال 6</div>
+      <div class="question-text">حسب الجدول في الكتاب، ما معامل انكسار الماء؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 6)">
+          <div class="option-label">أ</div>
+          1.52
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 6)">
+          <div class="option-label">ب</div>
+          1.47
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 6)">
+          <div class="option-label">ج</div>
+          1.33
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 6)">
+          <div class="option-label">د</div>
+          2.42
+        </div>
+      </div>
+      <div class="feedback" id="fb6"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question-card" data-q="7" data-type="mcq" data-answer="a">
+      <div class="question-num">السؤال 7</div>
+      <div class="question-text">ما الشرط الأساسي لحدوث ظاهرة الانعكاس الكلي الداخلي؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 7)">
+          <div class="option-label">أ</div>
+          أن ينتقل الضوء من وسط أكبر معامل انكساراً إلى وسط أقل معامل انكسار، وأن تتجاوز زاوية السقوط الزاوية الحرجة
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 7)">
+          <div class="option-label">ب</div>
+          أن ينتقل الضوء من وسط أقل كثافة إلى وسط أعلى كثافة
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 7)">
+          <div class="option-label">ج</div>
+          أن تكون زاوية السقوط صغيرة جداً
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 7)">
+          <div class="option-label">د</div>
+          أن يكون الوسطان من نفس المادة
+        </div>
+      </div>
+      <div class="feedback" id="fb7"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question-card" data-q="8" data-type="mcq" data-answer="d">
+      <div class="question-num">السؤال 8</div>
+      <div class="question-text">الزاوية الحرجة هي زاوية السقوط التي عندها تكون زاوية الانكسار:</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 8)">
+          <div class="option-label">أ</div>
+          °0
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 8)">
+          <div class="option-label">ب</div>
+          °45
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 8)">
+          <div class="option-label">ج</div>
+          °60
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 8)">
+          <div class="option-label">د</div>
+          °90
+        </div>
+      </div>
+      <div class="feedback" id="fb8"></div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question-card" data-q="9" data-type="mcq" data-answer="b">
+      <div class="question-num">السؤال 9</div>
+      <div class="question-text">الألياف الضوئية تعتمد في عملها على ظاهرة:</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 9)">
+          <div class="option-label">أ</div>
+          الانكسار البسيط
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 9)">
+          <div class="option-label">ب</div>
+          الانعكاس الكلي الداخلي
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 9)">
+          <div class="option-label">ج</div>
+          الانعكاس الجزئي
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 9)">
+          <div class="option-label">د</div>
+          امتصاص الضوء
+        </div>
+      </div>
+      <div class="feedback" id="fb9"></div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question-card" data-q="10" data-type="mcq" data-answer="c">
+      <div class="question-num">السؤال 10</div>
+      <div class="question-text">
+        شعاع ضوئي ينتقل من الهواء إلى وسط شفاف. إذا كانت سرعة الضوء في الفراغ
+        <span class="formula">c = 3×10⁸ m/s</span>
+        وسرعته في الوسط
+        <span class="formula">ν = 2×10⁸ m/s</span>
+        فما معامل انكسار هذا الوسط؟
+      </div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 10)">
+          <div class="option-label">أ</div>
+          0.67
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 10)">
+          <div class="option-label">ب</div>
+          1.00
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 10)">
+          <div class="option-label">ج</div>
+          1.50
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 10)">
+          <div class="option-label">د</div>
+          6.00
+        </div>
+      </div>
+      <div class="feedback" id="fb10"></div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="question-card" data-q="11" data-type="mcq" data-answer="a">
+      <div class="question-num">السؤال 11</div>
+      <div class="question-text">العدسة المحدّبة (المقرّبة) هي التي تُسمى أيضاً:</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 11)">
+          <div class="option-label">أ</div>
+          عدسة لامّة (تجميعية)
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 11)">
+          <div class="option-label">ب</div>
+          عدسة مشتّتة
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 11)">
+          <div class="option-label">ج</div>
+          عدسة مقعّرة
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 11)">
+          <div class="option-label">د</div>
+          عدسة مستوية
+        </div>
+      </div>
+      <div class="feedback" id="fb11"></div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="question-card" data-q="12" data-type="mcq" data-answer="b">
+      <div class="question-num">السؤال 12</div>
+      <div class="question-text">شعاع ضوئي يسقط عمودياً على الحد الفاصل بين وسطين شفافين. ماذا يحدث لمساره؟</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 12)">
+          <div class="option-label">أ</div>
+          ينكسر بزاوية °90
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 12)">
+          <div class="option-label">ب</div>
+          يستمر في نفس المسار دون انحراف، لكن سرعته تتغير
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 12)">
+          <div class="option-label">ج</div>
+          يُمتص كلياً
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 12)">
+          <div class="option-label">د</div>
+          يتوقف
+        </div>
+      </div>
+      <div class="feedback" id="fb12"></div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="question-card" data-q="13" data-type="mcq" data-answer="d">
+      <div class="question-num">السؤال 13</div>
+      <div class="question-text">السراب ظاهرة بصرية تنشأ بسبب:</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 13)">
+          <div class="option-label">أ</div>
+          انعكاس الضوء من سطح مرآة
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 13)">
+          <div class="option-label">ب</div>
+          امتصاص الضوء في الهواء الساخن
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 13)">
+          <div class="option-label">ج</div>
+          تشتت الضوء في الغلاف الجوي
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 13)">
+          <div class="option-label">د</div>
+          الانعكاس الكلي الداخلي في طبقات الهواء ذات درجات الحرارة المختلفة
+        </div>
+      </div>
+      <div class="feedback" id="fb13"></div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="question-card" data-q="14" data-type="mcq" data-answer="a">
+      <div class="question-num">السؤال 14</div>
+      <div class="question-text">
+        شعاع ضوئي ينتقل من الهواء (n₁=1) إلى الماء (n₂=1.33) بزاوية سقوط 30°.
+        حساب زاوية الانكسار باستخدام قانون سنِل يُعطي تقريباً:
+      </div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 14)">
+          <div class="option-label">أ</div>
+          °22 تقريباً (sin θ₂ ≈ 0.376)
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 14)">
+          <div class="option-label">ب</div>
+          °45
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 14)">
+          <div class="option-label">ج</div>
+          °30
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 14)">
+          <div class="option-label">د</div>
+          °60
+        </div>
+      </div>
+      <div class="feedback" id="fb14"></div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="question-card" data-q="15" data-type="mcq" data-answer="c">
+      <div class="question-num">السؤال 15</div>
+      <div class="question-text">العالم المسلم الذي يُنسب إليه أول وصف صحيح لقانون الانكسار هو:</div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 15)">
+          <div class="option-label">أ</div>
+          ابن سينا
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 15)">
+          <div class="option-label">ب</div>
+          الكندي
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 15)">
+          <div class="option-label">ج</div>
+          ابن سهل
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 15)">
+          <div class="option-label">د</div>
+          الفارابي
+        </div>
+      </div>
+      <div class="feedback" id="fb15"></div>
+    </div>
+
+    <!-- Section 2: True/False -->
+    <div class="section-title">
+      <div class="section-icon">✅</div>
+      <h2>ثانياً: صح أم خطأ</h2>
+      <span class="count">8 أسئلة</span>
+    </div>
+
+    <!-- TF Q16 -->
+    <div class="question-card" data-q="16" data-type="tf" data-answer="true">
+      <div class="question-num">السؤال 16</div>
+      <div class="question-text">معامل الانكسار ليس له وحدة قياس، لأنه نسبة بين كميتين لهما نفس وحدة القياس.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 16, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 16, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb16"></div>
+    </div>
+
+    <!-- TF Q17 -->
+    <div class="question-card" data-q="17" data-type="tf" data-answer="false">
+      <div class="question-num">السؤال 17</div>
+      <div class="question-text">تزداد سرعة الضوء في وسط شفاف كلما زاد معامل انكسار ذلك الوسط.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 17, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 17, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb17"></div>
+    </div>
+
+    <!-- TF Q18 -->
+    <div class="question-card" data-q="18" data-type="tf" data-answer="true">
+      <div class="question-num">السؤال 18</div>
+      <div class="question-text">تكون قيمة معامل الانكسار دائماً أكبر من أو تساوي 1.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 18, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 18, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb18"></div>
+    </div>
+
+    <!-- TF Q19 -->
+    <div class="question-card" data-q="19" data-type="tf" data-answer="true">
+      <div class="question-num">السؤال 19</div>
+      <div class="question-text">لحدوث الانعكاس الكلي الداخلي يجب أن تكون زاوية السقوط أكبر من الزاوية الحرجة.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 19, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 19, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb19"></div>
+    </div>
+
+    <!-- TF Q20 -->
+    <div class="question-card" data-q="20" data-type="tf" data-answer="false">
+      <div class="question-num">السؤال 20</div>
+      <div class="question-text">يمكن حدوث الانعكاس الكلي الداخلي عند انتقال الضوء من الهواء إلى الماء.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 20, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 20, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb20"></div>
+    </div>
+
+    <!-- TF Q21 -->
+    <div class="question-card" data-q="21" data-type="tf" data-answer="true">
+      <div class="question-num">السؤال 21</div>
+      <div class="question-text">عندما ينتقل شعاع ضوئي من وسط أقل معامل انكساراً إلى وسط أكبر معامل انكساراً، يقترب الشعاع المنكسر من العمود.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 21, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 21, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb21"></div>
+    </div>
+
+    <!-- TF Q22 -->
+    <div class="question-card" data-q="22" data-type="tf" data-answer="false">
+      <div class="question-num">السؤال 22</div>
+      <div class="question-text">تُستخدم الألياف الضوئية بشكل رئيسي في الطاقة الشمسية.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 22, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 22, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb22"></div>
+    </div>
+
+    <!-- TF Q23 -->
+    <div class="question-card" data-q="23" data-type="tf" data-answer="true">
+      <div class="question-num">السؤال 23</div>
+      <div class="question-text">معامل الانكسار للماس (2.42) أكبر من معامل الانكسار للزجاج (1.52)، مما يعني أن سرعة الضوء في الزجاج أكبر منها في الماس.</div>
+      <div class="tf-options">
+        <div class="tf-btn" onclick="selectTF(this, 23, true)">✓ صحيح</div>
+        <div class="tf-btn" onclick="selectTF(this, 23, false)">✗ خطأ</div>
+      </div>
+      <div class="feedback" id="fb23"></div>
+    </div>
+
+    <!-- Section 3: Fill in blank -->
+    <div class="section-title">
+      <div class="section-icon">✏️</div>
+      <h2>ثالثاً: أكمل الفراغات</h2>
+      <span class="count">4 أسئلة</span>
+    </div>
+
+    <!-- Fill Q24 -->
+    <div class="question-card" data-q="24" data-type="fill" data-answer="سنل">
+      <div class="question-num">السؤال 24</div>
+      <div class="question-text">يُسمى قانون الانكسار باسم العالم الألماني <strong>ويلبرورد _______</strong> الذي توصّل إليه تجريبياً عام 1621م.</div>
+      <input type="text" class="fill-input" id="fill24" placeholder="اكتب الإجابة هنا...">
+      <div class="feedback" id="fb24"></div>
+    </div>
+
+    <!-- Fill Q25 -->
+    <div class="question-card" data-q="25" data-type="fill" data-answer="90">
+      <div class="question-num">السؤال 25</div>
+      <div class="question-text">عند الزاوية الحرجة تكون زاوية الانكسار تساوي <strong>_______</strong> درجة.</div>
+      <input type="text" class="fill-input" id="fill25" placeholder="اكتب الإجابة هنا...">
+      <div class="feedback" id="fb25"></div>
+    </div>
+
+    <!-- Fill Q26 -->
+    <div class="question-card" data-q="26" data-type="fill" data-answer="2.25">
+      <div class="question-num">السؤال 26</div>
+      <div class="question-text">
+        إذا كانت سرعة الضوء في وسط شفاف
+        <span class="formula">ν = 1.33×10⁸ m/s</span>
+        فإن معامل الانكسار يساوي <strong>_______</strong> (تقريباً)
+      </div>
+      <input type="text" class="fill-input" id="fill26" placeholder="اكتب الإجابة هنا...">
+      <div class="feedback" id="fb26"></div>
+    </div>
+
+    <!-- Fill Q27 -->
+    <div class="question-card" data-q="27" data-type="fill" data-answer="الانعكاس الكلي الداخلي">
+      <div class="question-num">السؤال 27</div>
+      <div class="question-text">تعمل الألياف الضوئية على مبدأ ظاهرة <strong>_______________________</strong> لنقل الضوء والمعلومات.</div>
+      <input type="text" class="fill-input" id="fill27" placeholder="اكتب الإجابة هنا...">
+      <div class="feedback" id="fb27"></div>
+    </div>
+
+    <!-- Section 4: Short Answer -->
+    <div class="section-title">
+      <div class="section-icon">💡</div>
+      <h2>رابعاً: أسئلة تطبيقية وتفكير</h2>
+      <span class="count">3 أسئلة</span>
+    </div>
+
+    <!-- Q28 -->
+    <div class="question-card" data-q="28" data-type="mcq" data-answer="c">
+      <div class="question-num">السؤال 28</div>
+      <div class="question-text">
+        <div class="calc-note">🧮 سؤال حسابي</div>
+        شعاع ضوئي ينتقل من الماس (n=2.42) إلى الهواء (n=1). إذا كانت زاوية السقوط 20°، فما زاوية الانكسار؟
+        <div class="given-data">
+          <strong>المعطيات:</strong>
+          n₁ = 2.42 ، n₂ = 1 ، θ₁ = 20°
+          <br>تلميح: n₁ sin θ₁ = n₂ sin θ₂
+          <br>sin 20° ≈ 0.342
+        </div>
+      </div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 28)">
+          <div class="option-label">أ</div>
+          °28 تقريباً
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 28)">
+          <div class="option-label">ب</div>
+          °45 تقريباً
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 28)">
+          <div class="option-label">ج</div>
+          °56 تقريباً (sin θ₂ ≈ 0.827)
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 28)">
+          <div class="option-label">د</div>
+          °70 تقريباً
+        </div>
+      </div>
+      <div class="feedback" id="fb28"></div>
+    </div>
+
+    <!-- Q29 -->
+    <div class="question-card" data-q="29" data-type="mcq" data-answer="b">
+      <div class="question-num">السؤال 29</div>
+      <div class="question-text">
+        <div class="calc-note">🔬 سؤال تطبيقي</div>
+        في تجربة مخبرية، قاس طالب زاوية سقوط شعاع ضوئي على لوح زجاجي فوجدها 10°، وزاوية انكساره 13°. هل يمكن أن تكون هذه القيم صحيحة؟
+      </div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 29)">
+          <div class="option-label">أ</div>
+          نعم، لأن زاوية الانكسار أكبر
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 29)">
+          <div class="option-label">ب</div>
+          لا، لأن الضوء ينتقل من هواء إلى زجاج أكثف، يجب أن تكون زاوية الانكسار أصغر من زاوية السقوط
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 29)">
+          <div class="option-label">ج</div>
+          نعم، لأن الزاويتين متقاربتان
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 29)">
+          <div class="option-label">د</div>
+          لا يمكن التحديد بدون معرفة نوع الزجاج
+        </div>
+      </div>
+      <div class="feedback" id="fb29"></div>
+    </div>
+
+    <!-- Q30 -->
+    <div class="question-card" data-q="30" data-type="mcq" data-answer="a">
+      <div class="question-num">السؤال 30</div>
+      <div class="question-text">
+        الجدول التالي يُبيّن بيانات تجربة الانكسار:
+        <table class="data-table" style="margin: 12px 0">
+          <tr><th>زاوية السقوط θ₁</th><th>زاوية الانكسار θ₂</th></tr>
+          <tr><td>°30</td><td>°19.5</td></tr>
+          <tr><td>°45</td><td>°28.1</td></tr>
+          <tr><td>°60</td><td>°35.3</td></tr>
+        </table>
+        بناءً على البيانات، ما التوجه العام لهذه العلاقة؟
+      </div>
+      <div class="options">
+        <div class="option" data-val="a" onclick="selectOption(this, 30)">
+          <div class="option-label">أ</div>
+          كلما زادت زاوية السقوط، زادت زاوية الانكسار، لكن زاوية الانكسار تبقى أصغر (الضوء ينتقل من هواء إلى وسط أكثف)
+        </div>
+        <div class="option" data-val="b" onclick="selectOption(this, 30)">
+          <div class="option-label">ب</div>
+          العلاقة بين الزاويتين خطية تماماً
+        </div>
+        <div class="option" data-val="c" onclick="selectOption(this, 30)">
+          <div class="option-label">ج</div>
+          كلما زادت زاوية السقوط، قلّت زاوية الانكسار
+        </div>
+        <div class="option" data-val="d" onclick="selectOption(this, 30)">
+          <div class="option-label">د</div>
+          الزاويتان متساويتان دائماً
+        </div>
+      </div>
+      <div class="feedback" id="fb30"></div>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="btn btn-submit" id="submitBtn" onclick="submitQuiz()">
+      🎯 تسليم الاختبار ورؤية النتيجة
+    </button>
+  </div>
+
+  <!-- Results Screen -->
+  <div class="results-screen" id="resultsScreen">
+    <div id="resultEmoji" style="font-size: 3rem; margin-bottom: 16px;"></div>
+    <div class="score-circle">
+      <div class="score-number" id="scoreNum">0</div>
+      <div class="score-total" id="scoreTotal">من 30</div>
+      <div class="score-percent" id="scorePercent">0%</div>
+    </div>
+    <div class="grade-badge" id="gradeBadge"></div>
+    <div class="results-title" id="resultsTitle"></div>
+    <div class="results-subtitle" id="resultsSubtitle"></div>
+
+    <div class="results-breakdown">
+      <div class="breakdown-item c">
+        <div class="num" id="correctCount">0</div>
+        <div class="label">✓ إجابات صحيحة</div>
+      </div>
+      <div class="breakdown-item w">
+        <div class="num" id="wrongCount">0</div>
+        <div class="label">✗ إجابات خاطئة</div>
+      </div>
+      <div class="breakdown-item t">
+        <div class="num" id="unansweredCount">0</div>
+        <div class="label">— لم يُجب عليها</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+      <button class="btn btn-primary" onclick="reviewAnswers()">📋 مراجعة الإجابات</button>
+      <button class="btn btn-retry" onclick="retryQuiz()">🔄 إعادة الاختبار</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const answers = {};
+const correctAnswers = {
+  1: { type: 'mcq', answer: 'b', explanation: 'انكسار الضوء هو انحراف مسار الضوء عند انتقاله بين وسطين شفافين مختلفين بسبب تغير سرعته.' },
+  2: { type: 'mcq', answer: 'c', explanation: 'معامل الانكسار n = c/ν حيث c سرعة الضوء في الفراغ وν سرعته في الوسط الشفاف.' },
+  3: { type: 'mcq', answer: 'd', explanation: 'من جدول الكتاب: الهواء (1.0003) < الماء (1.33) < الزجاج (1.52) < الماس (2.42).' },
+  4: { type: 'mcq', answer: 'a', explanation: 'قانون سنِل: n₁ sin θ₁ = n₂ sin θ₂ حيث θ₁ زاوية السقوط وθ₂ زاوية الانكسار.' },
+  5: { type: 'mcq', answer: 'b', explanation: 'لأن n₂ > n₁ (الزجاج أكثف من الماء)، فإن الضوء يبطئ وينكسر مقترباً من العمود.' },
+  6: { type: 'mcq', answer: 'c', explanation: 'من جدول الكتاب: معامل انكسار الماء = 1.33.' },
+  7: { type: 'mcq', answer: 'a', explanation: 'شرطان: (1) الضوء من وسط أكثف إلى أخف، (2) زاوية السقوط أكبر من الزاوية الحرجة.' },
+  8: { type: 'mcq', answer: 'd', explanation: 'الزاوية الحرجة هي زاوية السقوط التي تُصبح عندها زاوية الانكسار 90°، أي ينكسر الشعاع موازياً للحد الفاصل.' },
+  9: { type: 'mcq', answer: 'b', explanation: 'الألياف الضوئية تعمل بمبدأ الانعكاس الكلي الداخلي لنقل الضوء على مسافات طويلة.' },
+  10: { type: 'mcq', answer: 'c', explanation: 'n = c/ν = (3×10⁸)/(2×10⁸) = 1.50، وهذا قريب من معامل انكسار الزجاج.' },
+  11: { type: 'mcq', answer: 'a', explanation: 'العدسة المحدبة تُجمّع الأشعة الضوئية في نقطة لذا تُسمى عدسة لامّة أو تجميعية.' },
+  12: { type: 'mcq', answer: 'b', explanation: 'عند السقوط العمودي (θ₁=0°)، نُعوّض في قانون سنِل: sin(0°)=0، فنجد θ₂=0°، أي يستمر الشعاع دون انحراف.' },
+  13: { type: 'mcq', answer: 'd', explanation: 'السراب يحدث عندما تنعكس أشعة الشمس انعكاساً كلياً داخلياً في طبقات الهواء القريبة من الأرض ذات درجات الحرارة المختلفة.' },
+  14: { type: 'mcq', answer: 'a', explanation: 'n₁ sin θ₁ = n₂ sin θ₂ ← 1×sin30° = 1.33×sin θ₂ ← sin θ₂ = 0.5/1.33 ≈ 0.376 ← θ₂ ≈ 22°' },
+  15: { type: 'mcq', answer: 'c', explanation: 'العالم ابن سهل (القرن العاشر الميلادي) هو أول من وصف قانون الانكسار وصفاً صحيحاً.' },
+  16: { type: 'tf', answer: true, explanation: 'صحيح. معامل الانكسار = c/ν وكلاهما بالوحدة نفسها (m/s)، فتُلغى الوحدات ويبقى بلا وحدة.' },
+  17: { type: 'tf', answer: false, explanation: 'خطأ. العلاقة عكسية: كلما زاد معامل الانكسار، قلّت سرعة الضوء في ذلك الوسط (n = c/ν).' },
+  18: { type: 'tf', answer: true, explanation: 'صحيح. لأن سرعة الضوء في أي وسط مادي أقل من سرعته في الفراغ، فإن n = c/ν ≥ 1 دائماً.' },
+  19: { type: 'tf', answer: true, explanation: 'صحيح. شرطان ضروريان: (1) ينتقل من وسط أكثف إلى أخف، (2) زاوية السقوط > الزاوية الحرجة.' },
+  20: { type: 'tf', answer: false, explanation: 'خطأ. لحدوث الانعكاس الكلي الداخلي يجب الانتقال من الوسط الأكثف إلى الأخف، لكن الهواء أقل كثافة من الماء.' },
+  21: { type: 'tf', answer: true, explanation: 'صحيح. عند الانتقال من n₁ < n₂ تقل السرعة وتصغر زاوية الانكسار (يقترب الشعاع من العمود).' },
+  22: { type: 'tf', answer: false, explanation: 'خطأ. الألياف الضوئية تُستخدم أساساً في الاتصالات والإنترنت والتصوير الطبي.' },
+  23: { type: 'tf', answer: true, explanation: 'صحيح. n(ماس) = 2.42 > n(زجاج) = 1.52، وبما أن n = c/ν، فكلما كبر n كلما صغرت ν، أي أن الزجاج أسرع من الماس.' },
+  24: { type: 'fill', answer: 'سنل', explanation: 'العالم الألماني "ويلبرورد سنِل" توصّل إلى قانون الانكسار تجريبياً عام 1621م.' },
+  25: { type: 'fill', answer: '90', explanation: 'عند الزاوية الحرجة، يكون الشعاع المنكسر موازياً للحد الفاصل وتساوي زاوية الانكسار 90°.' },
+  26: { type: 'fill', answer: '2.25', explanation: 'n = c/ν = (3×10⁸)/(1.33×10⁸) ≈ 2.25' },
+  27: { type: 'fill', answer: 'الانعكاس الكلي الداخلي', explanation: 'تعمل الألياف الضوئية على مبدأ الانعكاس الكلي الداخلي.' },
+  28: { type: 'mcq', answer: 'c', explanation: 'n₁ sin θ₁ = n₂ sin θ₂ → 2.42 × sin20° = 1 × sin θ₂ → sin θ₂ = 2.42×0.342 ≈ 0.827 → θ₂ ≈ 56°' },
+  29: { type: 'mcq', answer: 'b', explanation: 'عند انتقال الضوء من الهواء إلى الزجاج (أكثف)، يجب أن تكون زاوية الانكسار أصغر من زاوية السقوط. هنا 13° > 10° وهو مستحيل في هذا الاتجاه.' },
+  30: { type: 'mcq', answer: 'a', explanation: 'البيانات تُظهر أن زاوية الانكسار تزداد مع السقوط لكنها أصغر منها، مما يؤكد انتقال الضوء من الهواء إلى وسط أكثف.' }
+};
+
+let timerInterval;
+let seconds = 0;
+let submitted = false;
+
+// Timer
+function startTimer() {
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    document.getElementById('timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+startTimer();
+
+function updateProgress() {
+  const total = 30;
+  const answered = Object.keys(answers).length;
+  const pct = (answered / total) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent =
+    answered === 0 ? 'لم يُجب على أي سؤال بعد' :
+    answered === total ? '✅ تم الإجابة على جميع الأسئلة!' :
+    `تم الإجابة على ${answered} من ${total} سؤال`;
+}
+
+function selectOption(el, qNum) {
+  if (submitted) return;
+  const card = el.closest('.question-card');
+  card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[qNum] = el.getAttribute('data-val');
+  card.classList.add('answered');
+  updateProgress();
+}
+
+function selectTF(el, qNum, val) {
+  if (submitted) return;
+  const card = el.closest('.question-card');
+  card.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[qNum] = val;
+  card.classList.add('answered');
+  updateProgress();
+}
+
+function submitQuiz() {
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let correct = 0;
+  let wrong = 0;
+  let unanswered = 0;
+
+  for (let q = 1; q <= 30; q++) {
+    const data = correctAnswers[q];
+    const card = document.querySelector(`[data-q="${q}"]`);
+    const fb = document.getElementById(`fb${q}`);
+    const userAnswer = answers[q];
+
+    let isCorrect = false;
+
+    if (userAnswer === undefined || userAnswer === null) {
+      unanswered++;
+      fb.className = 'feedback wrong';
+      fb.style.display = 'block';
+      fb.textContent = `⚠️ لم تُجب على هذا السؤال. الإجابة الصحيحة: ${data.answer} — ${data.explanation}`;
+      card.classList.add('wrong');
+      continue;
+    }
+
+    if (data.type === 'mcq') {
+      isCorrect = userAnswer === data.answer;
+    } else if (data.type === 'tf') {
+      isCorrect = userAnswer === data.answer;
+    } else if (data.type === 'fill') {
+      const input = document.getElementById(`fill${q}`);
+      const userVal = input.value.trim();
+      // Check flexible matching
+      const answerLower = data.answer.toString().toLowerCase().replace(/\s+/g, '');
+      const userLower = userVal.toLowerCase().replace(/\s+/g, '');
+      isCorrect = userLower === answerLower ||
+                  userLower.includes(answerLower) ||
+                  answerLower.includes(userLower);
+    }
+
+    if (isCorrect) {
+      correct++;
+      card.classList.add('correct', 'answered');
+      fb.className = 'feedback correct';
+      fb.style.display = 'block';
+      fb.textContent = `✅ إجابة صحيحة! ${data.explanation}`;
+
+      if (data.type === 'fill') {
+        document.getElementById(`fill${q}`).classList.add('correct');
+      }
+    } else {
+      wrong++;
+      card.classList.add('wrong', 'answered');
+      fb.className = 'feedback wrong';
+      fb.style.display = 'block';
+      fb.textContent = `❌ إجابة خاطئة. الإجابة الصحيحة: ${data.answer} — ${data.explanation}`;
+
+      if (data.type === 'fill') {
+        document.getElementById(`fill${q}`).classList.add('wrong');
+      }
+    }
+
+    // Highlight MCQ
+    if (data.type === 'mcq') {
+      card.querySelectorAll('.option').forEach(opt => {
+        if (opt.getAttribute('data-val') === data.answer) {
+          opt.classList.add('correct-answer');
+        } else if (opt.getAttribute('data-val') === userAnswer && !isCorrect) {
+          opt.classList.add('wrong-answer');
+        }
+      });
+    }
+
+    // Highlight TF
+    if (data.type === 'tf') {
+      card.querySelectorAll('.tf-btn').forEach(btn => {
+        const btnVal = btn.textContent.includes('صحيح') ? true : false;
+        if (btnVal === data.answer) btn.classList.add('correct-answer');
+        else if (btnVal === userAnswer && !isCorrect) btn.classList.add('wrong-answer');
+      });
+    }
+  }
+
+  // Show results
+  const total = 30;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('submitBtn').style.display = 'none';
+
+  setTimeout(() => {
+    document.getElementById('resultsScreen').style.display = 'block';
+    document.getElementById('scoreNum').textContent = correct;
+    document.getElementById('scorePercent').textContent = pct + '%';
+    document.getElementById('correctCount').textContent = correct;
+    document.getElementById('wrongCount').textContent = wrong;
+    document.getElementById('unansweredCount').textContent = unanswered;
+
+    const badge = document.getElementById('gradeBadge');
+    const title = document.getElementById('resultsTitle');
+    const subtitle = document.getElementById('resultsSubtitle');
+    const emoji = document.getElementById('resultEmoji');
+
+    if (pct >= 90) {
+      badge.textContent = 'ممتاز 🏆';
+      badge.className = 'grade-badge grade-excellent';
+      title.textContent = 'أداء رائع!';
+      subtitle.textContent = 'تُتقن وحدة انكسار الضوء بشكل ممتاز. استمر في هذا التميز!';
+      emoji.textContent = '🌟';
+    } else if (pct >= 75) {
+      badge.textContent = 'جيد جداً ⭐';
+      badge.className = 'grade-badge grade-good';
+      title.textContent = 'أداء جيد جداً!';
+      subtitle.textContent = 'فهمك للمادة جيد. راجع الأسئلة التي أخطأت فيها لتحسين نتيجتك.';
+      emoji.textContent = '👍';
+    } else if (pct >= 60) {
+      badge.textContent = 'مقبول 📚';
+      badge.className = 'grade-badge grade-pass';
+      title.textContent = 'اجتزت الاختبار';
+      subtitle.textContent = 'لديك قاعدة جيدة. راجع موضوعي معامل الانكسار وقانون سنِل جيداً.';
+      emoji.textContent = '📖';
+    } else {
+      badge.textContent = 'يحتاج مراجعة 💪';
+      badge.className = 'grade-badge grade-fail';
+      title.textContent = 'تحتاج إلى المزيد من المراجعة';
+      subtitle.textContent = 'ارجع لمطالعة الوحدة من البداية، وركّز على قانون سنِل والانعكاس الكلي الداخلي.';
+      emoji.textContent = '📚';
+    }
+
+    document.getElementById('resultsScreen').scrollIntoView({ behavior: 'smooth' });
+  }, 500);
+}
+
+function reviewAnswers() {
+  document.getElementById('quizForm').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryQuiz() {
+  location.reload();
+}
+</script>
+</body>
+</html>
